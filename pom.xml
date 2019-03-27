@@ -39,6 +39,20 @@
             <version>3.8.1</version>
         </dependency>
 
+        <!-- quasar -->
+        <dependency>
+            <groupId>co.paralleluniverse</groupId>
+            <artifactId>quasar-core</artifactId>
+            <version>0.7.10</version>
+            <classifier>jdk8</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>co.paralleluniverse</groupId>
+            <artifactId>comsat-httpclient</artifactId>
+            <version>0.7.0</version>
+        </dependency>
+
         <!--日志-->
         <dependency>
             <groupId>org.slf4j</groupId>
