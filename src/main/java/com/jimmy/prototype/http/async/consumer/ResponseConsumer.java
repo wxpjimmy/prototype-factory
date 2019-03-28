@@ -87,7 +87,7 @@ public class ResponseConsumer extends AbstractAsyncResponseConsumer<String> {
         } else if (status != HttpStatus.SC_OK && status != HttpStatus.SC_NO_CONTENT) {
             throw new NoHttpResponseException(msgPrefix + statusMsg);
         }
-        logger.debug("Result from {}, response status:{}, bidResponse:{}", msgPrefix, status, result);
+//        logger.debug("Result from {}, response status:{}, bidResponse:{}", msgPrefix, status, result);
         return result;
     }
 

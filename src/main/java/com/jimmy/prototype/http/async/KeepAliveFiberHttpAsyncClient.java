@@ -176,17 +176,17 @@ public class KeepAliveFiberHttpAsyncClient {
         return httpClient.execute(HttpAsyncMethods.create(httpPost), new ResponseConsumer(dsp, host), new FutureCallback<String>() {
             @Override
             public void completed(String result) {
-                System.out.println("[" + System.currentTimeMillis() + "] Task succeed: " + dsp);
+                //System.out.println("[" + System.currentTimeMillis() + "] Task succeed: " + dsp);
             }
 
             @Override
             public void failed(Exception ex) {
-                System.out.println("[" + System.currentTimeMillis() + "] Task failed: " + dsp);
+               // System.out.println("[" + System.currentTimeMillis() + "] Task failed: " + dsp);
             }
 
             @Override
             public void cancelled() {
-                System.out.println("[" + System.currentTimeMillis() + "] Task cancelled: " + dsp);
+                //System.out.println("[" + System.currentTimeMillis() + "] Task cancelled: " + dsp);
             }
         });
     }
