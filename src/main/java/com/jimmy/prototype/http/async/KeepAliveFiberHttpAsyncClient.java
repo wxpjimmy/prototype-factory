@@ -1,12 +1,15 @@
 package com.jimmy.prototype.http.async;
 
+import co.paralleluniverse.fibers.Suspendable;
 import co.paralleluniverse.fibers.httpasyncclient.FiberCloseableHttpAsyncClient;
 import com.jimmy.prototype.http.async.consumer.BytesResponseConsumer;
 import com.jimmy.prototype.http.async.consumer.ResponseConsumer;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIUtils;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
@@ -134,6 +137,10 @@ public class KeepAliveFiberHttpAsyncClient {
         httpClient.start();
     }
 
+    public CloseableHttpAsyncClient getClient() {
+        return this.httpClient;
+    }
+
 
     public static HttpPost buildHttpPost(String host, String requestJsonString) {
         HttpPost httpPost = new HttpPost(host);
@@ -172,6 +179,29 @@ public class KeepAliveFiberHttpAsyncClient {
         return httpGet;
     }
 
+    @Suspendable
+    public Future<HttpResponse> execute(String host, String requestJsonString) {
+        HttpPost httpPost = buildHttpPost(host, requestJsonString);
+        HttpHost httpHost = URIUtils.extractHost(httpPost.getURI());
+        return httpClient.execute(httpHost, httpPost, new FutureCallback<HttpResponse>() {
+            @Override
+            public void completed(HttpResponse httpResponse) {
+
+            }
+
+            @Override
+            public void failed(Exception e) {
+                System.out.println("GetResponse failed!");
+            }
+
+            @Override
+            public void cancelled() {
+
+            }
+        });
+    }
+
+    @Suspendable
     public Future<String> execute(String dsp, String host, HttpPost httpPost) {
         return httpClient.execute(HttpAsyncMethods.create(httpPost), new ResponseConsumer(dsp, host), new FutureCallback<String>() {
             @Override

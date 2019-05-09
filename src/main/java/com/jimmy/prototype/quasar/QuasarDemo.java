@@ -5,12 +5,10 @@ import co.paralleluniverse.fibers.SuspendExecution;
 import co.paralleluniverse.fibers.Suspendable;
 import co.paralleluniverse.strands.SuspendableCallable;
 import com.jimmy.prototype.http.async.KeepAliveFiberHttpAsyncClient;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.HttpResponse;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -26,7 +24,13 @@ public class QuasarDemo {
             new Fiber<String>(new SuspendableCallable<String>() {
                 @Override
                 public String run() throws SuspendExecution, InterruptedException {
-                    return runOnce();
+                    Future<HttpResponse> res = runOnce();
+                    try {
+                        HttpResponse response =  res.get();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                    return "";
                 }
             }).start());
         }
@@ -42,21 +46,15 @@ public class QuasarDemo {
 
 
     @Suspendable
-    private String runOnce()  throws SuspendExecution {
-        HttpPost post = client.buildHttpPost(host, "test");
-        Future<String> future = client.execute("ttt", host, post);
-        try {
-           return future.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return "";
+    private Future<HttpResponse> runOnce() throws SuspendExecution, InterruptedException {
+        return client.execute(host, "test");
     }
 
     public static void main(String[] args) throws InterruptedException {
         QuasarDemo demo = new QuasarDemo();
-        demo.runWithFiber(10);
+        demo.runWithFiber(100);
+//        demo.runWithFiber(100000);
+//        demo.runWithFiber(100000);
+//        demo.runWithFiber(100000);
     }
 }
